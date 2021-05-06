@@ -1,30 +1,27 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view />
+	<div v-if="!userStore.getters.isLoggedIn" class="d-grid gap-2 col-6 mx-auto">
+		<FormLogin />
+	</div>
+	<div v-else class="text-center">
+		<h2>Welcome, {{ userStore.state.name }}</h2>
+		<Counter />
+		<button class="btn btn-secondary" @click="userStore.logout()">
+			Logout
+		</button>
+	</div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<script lang="ts">
+import { defineComponent, onMounted } from "vue";
+import userStore from "@/stores/user";
+import FormLogin from "@/components/FormLogin.vue";
+import Counter from "@/components/Counter.vue";
+export default defineComponent({
+	name: "App",
+	components: { FormLogin, Counter },
+	setup() {
+		onMounted(userStore.getUser);
+		return { userStore };
+	},
+});
+</script>
